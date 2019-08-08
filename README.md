@@ -9,4 +9,3 @@
 * [Bob Buzzard - Lightning Web Component Animated Progress Bar](http://bobbuzzard.blogspot.com/2019/04/lightning-web-component-animated.html)
 * [Bob Buzzard - Animated Lightning Progress Bar](http://bobbuzzard.blogspot.com/2017/11/animated-lightning-progress-bar.html)
 * [Bob Buzzard Blog](http://bobbuzzard.blogspot.com/)
-* 
