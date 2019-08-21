@@ -1,0 +1,82 @@
+<aura:component controller="onb_ApplicationDocumentController" implements="forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,flexipage:availableForAllPageTypes,force:hasRecordId">
+	
+    <ltng:require styles="{!$Resource.formStyles}" />
+    
+	
+    <aura:attribute name="fileId" type="Id"/>
+	<aura:attribute name="fileName" type="String"/>
+	<aura:attribute name="documents" type="List"/>
+	<aura:attribute name="applicationDocumentId" type="Id"/>
+
+	<aura:attribute name="showOnly" type="Boolean" default="false"/>
+
+	<aura:attribute name="label" type="String"/>
+	<aura:attribute name="parentId" type="Id"/>
+	<aura:attribute name="recordType" type="String"/>
+
+	<aura:attribute name="invalid" type="Boolean" access="public" description="Indicates if component not valid"/>
+	<aura:attribute name="required" type="Boolean" access="public" default="false" description="Standard required attribute"/>
+	<aura:method name="showHelpMessageIfInvalid" action="{!c.onValidate}" description="Standard required attribute"/>
+	<aura:attribute name="error" type="Boolean" default="false" description="Internal flag to display error message"/>
+
+	<aura:attribute name="community" type="String"/>
+	<aura:attribute name="fileLink" type="String" default="/sfc/servlet.shepherd/version/download/"/>
+
+	<aura:attribute name="percent" type="Decimal" default="0"/>
+	<aura:attribute name="deleting" type="Boolean" default="false"/>
+
+	<aura:handler name="init" value="{!this}" action="{!c.init}" />
+	<aura:registerEvent name="changed" type="c:onb_ApplicationSaveEvent"/>
+	
+    <div class="main-container">
+        <div class="container">
+	<div class="slds-form-element">
+		<aura:if isTrue="{!!empty(v.label)}">
+			<span class="slds-form-element__label" id="file-selector-primary-label">
+				<aura:if isTrue="{!v.required}">
+					<abbr title="required" class="slds-required">*</abbr>
+				</aura:if>
+				{!v.label}
+			</span>
+		</aura:if>
+        <lightning:layout multipleRows="true" horizontalAlign="left">
+			        <lightning:layoutItem class="slds-text-align--center" size="12">
+            <lightning:fileUpload
+				label="Upload"
+                name="onbFileUploader"
+				recordId="{!v.parentId}"
+				onuploadfinished="{!c.uploaded}"
+				multiple="true"
+				class="slds-button slds-button_outline-brand file-upload-button"
+                variant="brand" />
+        </lightning:layoutItem>
+        </lightning:layout>
+            <aura:if isTrue="{!v.error}">
+				<div aria-live="assertive" class="application-document__has-error slds-form-element__help">Complete this field.</div>
+			</aura:if>
+		<aura:if isTrue="{!not(empty(v.documents))}">
+			<aura:iteration items="{!v.documents}" var="doc" indexVar="di">
+			<div class="slds-form-element__static link-btn">
+				<aura:if isTrue="{!!v.deleting}">
+                    <aura:if isTrue="{!!v.showOnly}">
+						<lightning:buttonIcon
+								iconName="utility:close"
+								size="xx-small"
+								onclick="{!c.deleteDocument}"
+								alternativeText="Remove"
+								class="slds-m-right_xx-small"
+								value="{!doc.fileId}"
+						/>
+					</aura:if>
+					<a href="{!v.community + v.fileLink + doc.fileId}" target="_blank">{!doc.fileName}</a>
+				</aura:if>
+				<aura:if isTrue="{!v.deleting}">
+					&nbsp;
+				</aura:if>
+			</div>
+			</aura:iteration>
+		</aura:if>
+        </div>
+	</div>
+    </div>
+</aura:component>
